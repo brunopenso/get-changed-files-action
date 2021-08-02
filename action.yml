@@ -16,8 +16,6 @@ runs:
   steps:
     - run: echo current_sha ${{ inputs.current_sha }}. current_ref ${{ inputs.current_ref }}.
       shell: bash
-    - run: ${{ github.action_path }}/run.sh
-      shell: bash
     - run: git log --pretty=oneline | sed -n 2p | tr -s ' ' | cut -d ' ' -f 1
       name: debug Git Last Commit
       shell: bash
