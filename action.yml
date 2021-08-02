@@ -4,17 +4,35 @@ inputs:
   current_sha:  # id of input
     description: 'Commit id from the current (SHA)'
     required: true
+  current_ref:  # id of input
+    description: 'Branch that is running'
+    required: true
 outputs:
   files:
     description: "list of files with space separator"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
+    value: ${{ steps.random-number-generator.outputs.files }}
 runs:
   using: "composite"
   steps:
-    - run: echo current_sha ${{ inputs.current_sha }}.
-      shell: bash
-    - id: random-number-generator
-      run: echo "::set-output name=files::$(echo $RANDOM)"
+    - run: echo current_sha ${{ inputs.current_sha }}. current_ref ${{ inputs.current_ref }}.
       shell: bash
     - run: ${{ github.action_path }}/run.sh
+      shell: bash
+    - run: git log --pretty=oneline | sed -n 2p | tr -s ' ' | cut -d ' ' -f 1
+      name: debug Git Last Commit
+      shell: bash
+    - run: echo "LAST_COMMIT=$(git log --pretty=oneline | sed -n 2p | tr -s ' ' | cut -d ' ' -f 1)" >> $GITHUB_ENV
+      name: Git Last Commit
+      shell: bash
+    - run: echo $GITHUB_SHA && echo $LAST_COMMIT
+      name: print
+      shell: bash
+    - run: git diff $GITHUB_SHA $LAST_COMMIT --name-only
+      name: run diff
+      shell: bash
+    - run: echo "RESULT=$(git diff $GITHUB_SHA $LAST_COMMIT --name-only)" >> $GITHUB_ENV
+      name: Get list of files
+      shell: bash
+    - run: echo "::set-output name=files::$(echo $RESULT)"
+      name: File list
       shell: bash
