@@ -10,7 +10,7 @@ inputs:
 outputs:
   files:
     description: "list of files with space separator"
-    value: ${{ steps.random-number-generator.outputs.files }}
+    value: ${{ steps.list-of-files.outputs.files-list }}
 runs:
   using: "composite"
   steps:
@@ -28,6 +28,7 @@ runs:
     - run: git diff $GITHUB_SHA $LAST_COMMIT --name-only
       name: run diff
       shell: bash
-    - run: echo "::set-output name=files::=$(git diff $GITHUB_SHA $LAST_COMMIT --name-only)"
+    - id: list-of-files
+      run: echo "::set-output name=files-list::=$(git diff $GITHUB_SHA $LAST_COMMIT --name-only)"
       name: Get list of files
       shell: bash
