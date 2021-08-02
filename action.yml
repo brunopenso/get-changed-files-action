@@ -22,12 +22,6 @@ runs:
     - run: echo "LAST_COMMIT=$(git log --pretty=oneline | sed -n 2p | tr -s ' ' | cut -d ' ' -f 1)" >> $GITHUB_ENV
       name: Git Last Commit
       shell: bash
-    - run: echo $GITHUB_SHA && echo $LAST_COMMIT
-      name: print
-      shell: bash
-    - run: git diff $GITHUB_SHA $LAST_COMMIT --name-only
-      name: run diff
-      shell: bash
     - id: list-of-files
       run: echo "::set-output name=files-list::=$(git diff $GITHUB_SHA $LAST_COMMIT --name-only)"
       name: Get list of files
