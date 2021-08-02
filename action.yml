@@ -1,0 +1,20 @@
+name: 'Git Diff'
+description: 'Github actions to retrive a list of files changed between the current and last commit on the same branch'
+inputs:
+  current_sha:  # id of input
+    description: 'Commit id from the current (SHA)'
+    required: true
+outputs:
+  files:
+    description: "list of files with space separator"
+    value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - run: echo Hello ${{ inputs.who-to-greet }}.
+      shell: bash
+    - id: random-number-generator
+      run: echo "::set-output name=random-id::$(echo $RANDOM)"
+      shell: bash
+    - run: ${{ github.action_path }}/run.sh
+      shell: bash
