@@ -11,10 +11,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: echo Hello ${{ inputs.who-to-greet }}.
+    - run: echo current_sha ${{ inputs.current_sha }}.
       shell: bash
     - id: random-number-generator
-      run: echo "::set-output name=random-id::$(echo $RANDOM)"
+      run: echo "::set-output name=files::$(echo $RANDOM)"
       shell: bash
     - run: ${{ github.action_path }}/run.sh
       shell: bash
